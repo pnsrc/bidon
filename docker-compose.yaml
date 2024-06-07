@@ -1,0 +1,65 @@
+version: '3.7'
+
+services:
+  web:
+    image: nginx:alpine
+    container_name: bidon-nginx
+    ports:
+      - "80:80"
+    volumes:
+      - ./bitrix:/var/www/html
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./default.conf:/etc/nginx/conf.d/default.conf:ro
+      - /var/log/nginx:/var/log/nginx
+    depends_on:
+      - php-fpm
+      - db
+    networks:
+      - bidon-net
+
+  php-fpm:
+    build: ./php
+    container_name: bidon-php
+    volumes:
+      - ./bitrix:/var/www/html
+      - ./php/php.ini:/usr/local/etc/php/php.ini
+    networks:
+      - bidon-net
+    environment:
+      TZ: Europe/Moscow
+
+  db:
+    image: mysql:5.7
+    container_name: bidon-db
+    volumes:
+      - db_data:/var/lib/mysql
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: root_password
+      MYSQL_DATABASE: bitrix
+      MYSQL_USER: bitrix
+      MYSQL_PASSWORD: root_password
+    networks:
+      - bidon-net
+
+  redis:
+    image: redis:alpine
+    container_name: bidon-redis
+    restart: always
+    networks:
+      - bidon-net
+
+  adminer:
+    image: adminer
+    container_name: bidon-adminer
+    restart: always
+    ports:
+      - "8081:8080"
+    networks:
+      - bidon-net
+
+volumes:
+  db_data:
+
+networks:
+  bidon-net:
