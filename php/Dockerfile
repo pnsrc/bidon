@@ -17,6 +17,6 @@ RUN docker-php-ext-configure gd --with-freetype --with-jpeg --with-webp --with-x
     && pecl install redis \
     && docker-php-ext-enable redis
 
-RUN chmod -R 777 /var/www/html/
+RUN cd / && chmod -R 777 /var/www/html/
 
 COPY php.ini /usr/local/etc/php/php.ini
