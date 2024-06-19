@@ -10,13 +10,17 @@ RUN apk --no-cache add \
     tzdata \
     autoconf \
     g++ \
-    make
+    make \
+    git \
+    libmemcached-dev 
 
 RUN docker-php-ext-configure gd --with-freetype --with-jpeg --with-webp --with-xpm \
     && docker-php-ext-install gd mysqli pdo pdo_mysql zip \
     && pecl install redis \
+    && pecl install -f memcached-3.2.0 \
+    && docker-php-ext-enable memcached \
     && docker-php-ext-enable redis
 
-RUN cd / && chmod -R 777 /var/www/html/
+RUN chmod -R 777 /var/www/html/
 
 COPY php.ini /usr/local/etc/php/php.ini

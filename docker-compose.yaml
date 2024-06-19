@@ -42,10 +42,12 @@ services:
     networks:
       - bidon-net
 
-  redis:
-    image: redis:alpine
-    container_name: bidon-redis
+  memcache:
+    image: memcached
+    container_name: bidon_memcache
     restart: always
+    ports:
+      - "11211:11211"
     networks:
       - bidon-net
 
@@ -58,6 +60,13 @@ services:
     networks:
       - bidon-net
 
+  cron-service:
+    image: xordiv/docker-alpine-cron
+    container_name: bidon-cron
+    restart: always
+    networks:
+      - bidon-net
+
   ngrok:
     image: ngrok/ngrok
     container_name: bidon-ngrok
@@ -65,7 +74,7 @@ services:
       - web
     command: http web:80
     environment:
-      NGROK_AUTHTOKEN: "place your token here" # Replace with your actual ngrok auth token
+      NGROK_AUTHTOKEN: "2hflvUJK1RScvbtQV5ktp3fsVC4_52ad782Cc66aUVVJsscHU" # Replace with your actual ngrok auth token
     networks:
       - bidon-net
 
@@ -77,7 +86,7 @@ services:
     volumes:
       - ./bitrix:/home/coder/project
     environment:
-      PASSWORD: "your_password" # Replace with your desired password for Code Server
+      PASSWORD: "root" # Replace with your desired password for Code Server
     networks:
       - bidon-net
 
