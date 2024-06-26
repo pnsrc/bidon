@@ -12,14 +12,18 @@ RUN apk --no-cache add \
     g++ \
     make \
     git \
-    libmemcached-dev 
+    libmemcached-dev \
+    php-opcache
 
 RUN docker-php-ext-configure gd --with-freetype --with-jpeg --with-webp --with-xpm \
-    && docker-php-ext-install gd mysqli pdo pdo_mysql zip \
+    && docker-php-ext-install gd mysqli pdo pdo_mysql zip opcache \
     && pecl install redis \
+    && pecl install memcache \
     && pecl install -f memcached-3.2.0 \
+    && docker-php-ext-enable memcache \
     && docker-php-ext-enable memcached \
-    && docker-php-ext-enable redis
+    && docker-php-ext-enable redis \
+    && docker-php-ext-enable opcache
 
 RUN chmod -R 777 /var/www/html/
 

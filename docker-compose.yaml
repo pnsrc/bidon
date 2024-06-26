@@ -74,7 +74,7 @@ services:
       - web
     command: http web:80
     environment:
-      NGROK_AUTHTOKEN: "2hflvUJK1RScvbtQV5ktp3fsVC4_52ad782Cc66aUVVJsscHU" # Replace with your actual ngrok auth token
+      NGROK_AUTHTOKEN: "put ur token here" # Replace with your actual ngrok auth token
     networks:
       - bidon-net
 
